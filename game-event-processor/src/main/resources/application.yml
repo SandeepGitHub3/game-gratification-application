@@ -1,0 +1,18 @@
+spring:
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+      bindings:
+        game-progress-event-in:
+          destination: game-progress-event
+          consumer:
+            use-native-decoding: true
+            application-id: game-progress-event-group
+management:
+  endpoint:
+    health:
+      show-details: always
+server:
+  port: 8082
