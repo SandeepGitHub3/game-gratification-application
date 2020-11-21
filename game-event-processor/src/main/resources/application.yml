@@ -10,6 +10,11 @@ spring:
           consumer:
             use-native-decoding: true
             application-id: game-progress-event-group
+        game-progress-event-stream-in:
+          destination: game-progress-event
+          consumer:
+            use-native-decoding: true
+            application-id: game-progress-event-group
 management:
   endpoint:
     health:
