@@ -20,20 +20,24 @@ Navigate to root folder
     
 Start Kafka Cluster
 
-    `docker-compose -f kafka-docker-compose.yml up`
+    docker-compose -f kafka-docker-compose.yml up
+
 Stop Kafka Cluster
 
-    `docker-compose -f kafka-docker-compose.yml down`
+    docker-compose -f kafka-docker-compose.yml down
     
 # Start Event Producer
+
     cd /game-gratification-application/game-event-producer
     ./gradlew bootrun
     
 # Start Event Processor    
+
     cd /game-gratification-application/game-event-processor
     ./gradlew bootrun
     
 # Rest Endpoints
+
 Producer HealthCheck: http://localhost:8081//actuator/health
 
 Processor HealthCheck: http://localhost:8082//actuator/health
