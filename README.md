@@ -1,5 +1,6 @@
 # Game Gratification Application
 Application to perform real-time stream analysis of user game progress events and take action as per defined business criteria.
+
 Please refer [Problem-Statement.txt](https://github.com/SandeepGitHub3/game-gratification-application/blob/main/Problem-Statement.txt) for detailed requirement spec.
 
 # Tech Stack:
