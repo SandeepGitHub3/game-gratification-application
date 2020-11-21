@@ -29,7 +29,7 @@ Stop Kafka Cluster
     
 # Start Event Processor    
     cd /game-gratification-application/game-event-processor
-    ./gradle bootrun
+    ./gradlew bootrun
     
 # Rest Endpoints
 Producer HealthCheck: http://localhost:8081//actuator/health
