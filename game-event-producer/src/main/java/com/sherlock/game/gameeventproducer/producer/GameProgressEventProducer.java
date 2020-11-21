@@ -20,7 +20,8 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.IntStream;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -28,28 +29,29 @@ import java.util.stream.IntStream;
 @EnableBinding(GameProgressEventBindings.class)
 public class GameProgressEventProducer {
 
+	private static final DecimalFormat DECIMAL_FORMAT_2 = new DecimalFormat("#.##");
 	private final GameProgressEventBindings gameProgressEventBindings;
 	private final ObjectMapper objectMapper = new ObjectMapper();
 	private final List<UserRole> userRoles = Arrays.asList(UserRole.ADMIN, UserRole.PLAYER);
 	private final Random random = new Random();
-	private static final DecimalFormat DECIMAL_FORMAT_2 = new DecimalFormat("#.##");
+
 	public void generateGameProgressRandomEvent(Integer noOfEvents) {
-		IntStream.range(0, noOfEvents).forEach(i -> sendMessage());
+		//IntStream.range(0, noOfEvents).forEach(i -> sendMessage());
 
 		/*Use this incase we need to generate a continous flow of progress event messages to simulate Production like scenario*/
-		//Executors.newScheduledThreadPool(1).scheduleAtFixedRate(this::sendMessage, 10, 300, TimeUnit.MILLISECONDS);
+		Executors.newScheduledThreadPool(1).scheduleAtFixedRate(this::sendMessage, 10, 300, TimeUnit.MILLISECONDS);
 	}
 
 	@SneakyThrows
 	private void sendMessage() {
 
 		GameProgressEvent gameProgressEvent = GameProgressEvent.builder()
-				.playerId((long) (Math.random() * (100 - 1 + 1) + 1))
+				.playerId((long) (Math.random() * (10 - 1 + 1) + 1))
 				.gameId("GAME".concat(String.valueOf((long) (Math.random() * (10 - 1 + 1) + 1))))
 				.level((long) (Math.random() * (10 - 1 + 1) + 1))
 				.userRole(userRoles.get(random.nextInt(userRoles.size())))
 				.completionPercent(new BigDecimal(Math.random() * (100 - 1 + 1) + 1).setScale(2, RoundingMode.HALF_EVEN).doubleValue())
-				.timeSpent((long) (Math.random() * (10 - 1 + 5) + 1))
+				.timeSpent((long) (Math.random() * (100 - 1 + 5) + 1))
 				.createdAt(ZonedDateTime.now().toInstant().toEpochMilli())
 				.build();
 

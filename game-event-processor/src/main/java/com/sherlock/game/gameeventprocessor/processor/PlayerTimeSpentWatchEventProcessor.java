@@ -15,8 +15,8 @@ public class PlayerTimeSpentWatchEventProcessor extends AbstractProcessor<String
 		//Players score may not be exactly 1000 ,so checking the range.
 		//Once the totaltime is above 1010 we do not print anything.
 		// We could define other levels as well based on actual business case.
-		if (totalTime>3000 && totalTime<3500){
-			log.info("Game:{} Player :{} ******** CONGRATULATIONS on completing 1000 mins",gameId,playerId);
+		if (totalTime>500 && totalTime<600){
+			log.info("Game:{} Player :{} ******** CONGRATULATIONS on completing 500+ mins",gameId,playerId);
 		}
 	}
 }

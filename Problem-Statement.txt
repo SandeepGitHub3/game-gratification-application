@@ -1,0 +1,100 @@
+************************************************************************************************************************************
+Implement Online Game Gratification system using Kafka Streams.
+************************************************************************************************************************************
+
+Product Offering:
+
+--There could be multiple active games at the same time.
+--A user registers and plays a particular game [or could be multiple games at the same time]
+--Users registered in a game can have different roles eg: Admin Player
+
+We want to design a system which can analyse user game progress and perform some action based on certain criteria.
+Eg: When user achieves certain level in the game we want to send email notification (or perform any other action).
+
+We will implement this in 2 Parts.
+
+************************************************************************************************************************************
+Part 1:
+************************************************************************************************************************************
+
+Learning Objectives:
+1-Understand Kafka and why it is not just a replacement of another messaging system.
+2-Learn to use Spring Abstraction framework (Spring cloud stream) for writing Kafka based projects.
+
+This video is a good starting point to learn Kafka.
+https://www.youtube.com/watch?v=JalUUBKdcA0&t=36s
+
+1-Create a Spring Boot Application which produces User Game Progress Event.
+Consider below sample event message and publish this to a Kafka Topic, when the user completes a particular level.
+It contains the time spent by the user in completing that level and the overall game completion percent.
+
+Sample Event
+{
+	userId : 1,                      //0<userId<=100
+	gameId: GAME1,                   //GAME1<=gameId<=GAME10
+	level:1                          //0<level<=10
+	userRole: PLAYER,    			//Assume it could be either ADMIN or PLAYER
+	timeSpent :40       			//in Mins
+	gameCompletionPercent: 10
+}
+
+You can implement a processor, which produces randomised event data with the given constraints.
+
+2-Create another Spring Boot project which consumes the User Game Progress Event and logs the event
+Use below dependencies
+--Spring Cloud Stream
+--Spring Cloud Kafka Binder.
+
+For Part 2 we will extend Part 1 to accept the incoming messages as a message stream and perform real time analysis on it.
+
+************************************************************************************************************************************
+Part 2:
+************************************************************************************************************************************
+
+
+Prerequisite: Need to have basic project setup with Producer/Consumer sending messages through Kafka Cluster.
+
+Modify you producer to produce event messages as a continuous flow of messages simulating like an actual messaging system.
+
+	public void generateGameProgressRandomEvent() {
+		Executors.newScheduledThreadPool(1).scheduleAtFixedRate(this::sendMessage, 10, 300, TimeUnit.MILLISECONDS);
+	}
+	private void sendMessage() {
+		//prepare Game Event progress Message with randomised data and send it across Kafka Cluster.
+	}
+
+In your Spring boot project which contains the consumer, create another Consumer which will accept the producer messages
+as a stream of game progress event messages and perform below 2 operations on this stream.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1] [Concepts to Learn - Streams Filter]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Whenever a User in a specific game
+-->Has Role as PLAYER
+-->Completes level 10 (Level No =10 and not Count of level as 10)
+
+Print out a log message saying '***** CONGRATULATIONS on completing level 10 ******'
+(In a real life application, this could be any actions like sending a notification popup/email to the user)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2] [Concepts to Learn - Streams Filter, Aggregation]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Aggregate the time spent by the user(PLAYER role) at game level and print out a message when the user completes 1000 mins in a particular game.
+So you need to keep a track of time spent by users in whatever game they are playing, as below and then when a user reaches(or exceeds) defined amount of time
+
+Print out a log message saying. '***** CONGRATULATIONS on completing 1000 mins ******'
+| Game   | User | Time Spent |
+| Game 1 |  1   |  120 mins  |
+| Game 5 |  1   |  180 mins  |
+| Game 7 |  2   |  340 mins  |
+NOTE: You cannot use DB table or Redis Cache to store this aggregation.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Bonus Question: [Concepts to Learn - Streams Filter, Aggregation, Windowing]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If the user completes 3 levels(level count- could be any level) of a particular game in a span on 1 min print a message saying
+
+'***** You have been SUPER-FAST at your game ******'

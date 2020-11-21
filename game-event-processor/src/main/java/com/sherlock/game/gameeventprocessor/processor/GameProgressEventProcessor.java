@@ -23,7 +23,7 @@ public class GameProgressEventProcessor {
 
 	@StreamListener(GameProgressEventProcessorBindings.GAME_PROGRESS_EVENT_IN)
 	public void processGameProgressEvent(GameProgressEvent gameProgressEvent) {
-		log.info("Received Event:{}", gameProgressEvent);
+		//log.info("Received Event:{}", gameProgressEvent);
 	}
 
 	@StreamListener
